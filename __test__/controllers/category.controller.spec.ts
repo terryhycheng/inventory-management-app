@@ -1,6 +1,6 @@
-import '../../mongoose_helper';
-import { Category } from '../../models/category.model';
-import { categoryController } from '../category.controller';
+import '../mongoose_helper';
+import { Category } from '../../server/models/category.model';
+import { categoryController } from '../../server/controllers/category.controller';
 
 describe('category controller', () => {
   beforeAll(() => Category.deleteMany());
