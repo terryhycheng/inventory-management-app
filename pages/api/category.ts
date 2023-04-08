@@ -14,13 +14,15 @@ export default async function handler(
 ) {
   if (req.method === 'POST') {
     const { name } = req.body;
+    if (!name) {
+      res.status(400).json({ message: '`name` is required' });
+      return;
+    }
     try {
       const category = await categoryController.addCategory({ name });
       res.status(201).json(category);
     } catch (error) {
       res.status(500).json({ message: (error as Error).message });
     }
-  } else {
-    res.status(404).json({ message: 'This route does not exist.' });
   }
 }
