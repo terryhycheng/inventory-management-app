@@ -24,7 +24,7 @@ describe('Category API', () => {
     expect(data.name).toEqual('testing');
   });
 
-  it('should throw an error with status code 500', async () => {
+  it('should throw an error when `name` is missing', async () => {
     const { req, res } = createMocks({
       method: 'POST',
     });
@@ -34,5 +34,17 @@ describe('Category API', () => {
 
     expect(res._getStatusCode()).toBe(400);
     expect(data.message).toEqual('`name` is required');
+  });
+
+  it('should throw an error when method does not exist', async () => {
+    const { req, res } = createMocks({
+      method: 'PATCH',
+    });
+
+    await categoryApi(req, res);
+    const data = JSON.parse(res._getData());
+
+    expect(res._getStatusCode()).toBe(400);
+    expect(data.message).toEqual('method does not exist');
   });
 });

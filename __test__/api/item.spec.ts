@@ -1,0 +1,89 @@
+import { Item, ItemInput } from '../../server/models/item.model';
+import { Category, ICategory } from '../../server/models/category.model';
+import '../mongoose_helper';
+import { createMocks } from 'node-mocks-http';
+import itemApi from '../../pages/api/item';
+
+let category: ICategory;
+
+describe('item Api', () => {
+  beforeAll(async () => {
+    await Category.deleteMany();
+    await Item.deleteMany();
+    category = await Category.create({ name: 'food' });
+  });
+
+  afterEach(async () => await Item.deleteMany());
+
+  it('should return a new item with 201 status code', async () => {
+    const input: ItemInput = {
+      name: 'testing item',
+      price: 20,
+      cost: 10,
+      openToSell: false,
+      category: 'food',
+    };
+
+    const { req, res } = createMocks({
+      method: 'POST',
+      body: input,
+    });
+
+    await itemApi(req, res);
+    const data = JSON.parse(res._getData());
+
+    expect(res._getStatusCode()).toBe(201);
+    expect(data._id).toBeDefined();
+    expect(data.name).toEqual('testing item');
+    expect(data.category).toEqual(category._id.toString());
+  });
+
+  it('should return 400 status code if one field is missing', async () => {
+    const { req, res } = createMocks({
+      method: 'POST',
+      body: {
+        name: 'testing item',
+        price: 20,
+        cost: 10,
+        category: 'food',
+      },
+    });
+
+    await itemApi(req, res);
+    const data = JSON.parse(res._getData());
+
+    expect(res._getStatusCode()).toBe(400);
+    expect(data.message).toEqual('all fields must not be empty');
+  });
+
+  it('should return 400 status code when the category does not exist', async () => {
+    const { req, res } = createMocks({
+      method: 'POST',
+      body: {
+        name: 'testing item',
+        price: 20,
+        cost: 10,
+        openToSell: true,
+        category: 'wrong category',
+      },
+    });
+
+    await itemApi(req, res);
+    const data = JSON.parse(res._getData());
+
+    expect(res._getStatusCode()).toBe(400);
+    expect(data.message).toEqual('category does not exist');
+  });
+
+  it('should throw an error when method does not exist', async () => {
+    const { req, res } = createMocks({
+      method: 'PATCH',
+    });
+
+    await itemApi(req, res);
+    const data = JSON.parse(res._getData());
+
+    expect(res._getStatusCode()).toBe(400);
+    expect(data.message).toEqual('method does not exist');
+  });
+});

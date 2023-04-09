@@ -26,5 +26,7 @@ export default async function handler(
     } catch (error) {
       res.status(500).json({ message: (error as Error).message });
     }
+  } else {
+    res.status(400).json({ message: 'method does not exist' });
   }
 }
