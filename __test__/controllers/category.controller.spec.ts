@@ -9,12 +9,31 @@ describe('category controller', () => {
 
   describe('#addCategory', () => {
     it('should create a new category', async () => {
-      const category: CategoryInput = {
+      const input: CategoryInput = {
         name: 'food',
       };
-      const record = await categoryController.addCategory(category);
+      const record = await categoryController.addCategory(input);
       expect(record._id).toBeDefined();
       expect(record.name).toEqual('food');
+    });
+  });
+
+  describe('#findByName', () => {
+    beforeAll(async () => {
+      const input: CategoryInput = {
+        name: 'food',
+      };
+      await categoryController.addCategory(input);
+    });
+    it('should return the correct category', async () => {
+      const category = await categoryController.findByName('food');
+      expect(category!._id).toBeDefined();
+      expect(category!.name).toEqual('food');
+    });
+
+    it('should return null', async () => {
+      const category = await categoryController.findByName('wrong name');
+      expect(category).toBe(null);
     });
   });
 });

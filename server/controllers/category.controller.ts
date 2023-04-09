@@ -9,4 +9,15 @@ export const categoryController = {
       throw new Error(`Error from #addCategory: ${(error as Error).message}`);
     }
   },
+
+  findByName: async (name: string) => {
+    try {
+      const category = await Category.findOne({ name }).exec();
+      return category || null;
+    } catch (error) {
+      throw new Error(
+        `Error from #findCategoryByName: ${(error as Error).message}`
+      );
+    }
+  },
 };
