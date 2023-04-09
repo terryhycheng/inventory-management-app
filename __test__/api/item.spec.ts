@@ -7,17 +7,17 @@ import itemApi from '../../pages/api/item';
 let category: ICategory | null;
 
 describe('item Api', () => {
-  describe('GET route', () => {
-    beforeEach(async () => {
-      await Category.deleteMany();
-      await Item.deleteMany();
-      category = await Category.create({ name: 'food' });
-    });
+  beforeAll(async () => {
+    await Category.deleteMany();
+    await Item.deleteMany();
+    category = await Category.create({ name: 'food' });
+  });
 
-    afterEach(async () => {
-      await Item.deleteMany();
-      category = null;
-    });
+  afterEach(async () => {
+    await Item.deleteMany();
+  });
+
+  describe('GET route', () => {
     it('should return a list of items with 200 status code', async () => {
       // SETUP
       const input: ItemInput = {
@@ -49,16 +49,6 @@ describe('item Api', () => {
   });
 
   describe('POST route', () => {
-    beforeEach(async () => {
-      await Category.deleteMany();
-      await Item.deleteMany();
-      category = await Category.create({ name: 'food' });
-    });
-
-    afterEach(async () => {
-      await Item.deleteMany();
-      category = null;
-    });
     it('should return a new item with 201 status code', async () => {
       const input: ItemInput = {
         name: 'testing item',
