@@ -1,3 +1,4 @@
+import { connectDB } from '../../util/connectMongo';
 import { categoryController } from '../../server/controllers/category.controller';
 import { ICategory } from '../../server/models/category.model';
 import type { NextApiRequest, NextApiResponse } from 'next';
@@ -19,6 +20,7 @@ export default async function handler(
       return;
     }
     try {
+      await connectDB();
       const category = await categoryController.addCategory({ name });
       res.status(201).json(category);
     } catch (error) {

@@ -1,12 +1,8 @@
-import mongoose, { ConnectOptions } from 'mongoose';
+import { connectDB } from '../util/connectMongo';
+import mongoose from 'mongoose';
 
 beforeAll(async () => {
-  const mongoUrl: string = 'mongodb://0.0.0.0/mern-inventory-test';
-
-  await mongoose.connect(mongoUrl, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  } as ConnectOptions);
+  await connectDB();
 });
 
 afterAll(async () => {
