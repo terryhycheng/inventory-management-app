@@ -19,35 +19,9 @@
     "baseUrl": ".",
     "types": ["node", "jest"],
     "paths": {
-      "~/*": ["./src/*"]
+      "@/*": ["./*"]
     }
   },
   "include": ["**/*.tsx", "__test__/**/*.spec.ts"],
   "exclude": ["node_modules", "cypress"]
 }
-
-// {
-//   "compilerOptions": {
-//     "target": "es5",
-//     "lib": ["dom", "dom.iterable", "esnext"],
-//     "allowJs": true,
-//     "skipLibCheck": true,
-//     "strict": true,
-//     "forceConsistentCasingInFileNames": true,
-//     "noEmit": true,
-//     "esModuleInterop": true,
-//     "module": "esnext",
-//     "moduleResolution": "node",
-//     "resolveJsonModule": true,
-//     "isolatedModules": true,
-//     "noUncheckedIndexedAccess": true,
-//     "jsx": "preserve",
-//     "incremental": true,
-//     "paths": {
-//       "@/*": ["./*"]
-//     },
-//     "types": ["node", "jest"]
-//   },
-//   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-//   "exclude": ["node_modules", "cypress"]
-// }
