@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-interface IItem extends Document {
+export interface ItemInput {
   name: string;
   price: number;
   cost: number;
@@ -8,7 +8,9 @@ interface IItem extends Document {
   category?: string;
 }
 
-const ItemSchema = new mongoose.Schema({
+export interface IItem extends ItemInput, Document {}
+
+const ItemSchema = new mongoose.Schema<IItem>({
   name: { type: String, require: true },
   price: { type: Number, require: true },
   cost: { type: Number, require: true },
@@ -20,4 +22,4 @@ const ItemSchema = new mongoose.Schema({
   },
 });
 
-export const Item = mongoose.model<IItem>('Item', ItemSchema);
+export const Item = mongoose.model('Item', ItemSchema);

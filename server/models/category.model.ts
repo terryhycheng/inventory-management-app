@@ -6,8 +6,8 @@ export interface CategoryInput {
 
 export interface ICategory extends CategoryInput, mongoose.Document {}
 
-const CategorySchema = new mongoose.Schema({
+const CategorySchema = new mongoose.Schema<ICategory>({
   name: { type: String, require: true },
 });
 
-export const Category = mongoose.model<ICategory>('Category', CategorySchema);
+export const Category = mongoose.model('Category', CategorySchema);

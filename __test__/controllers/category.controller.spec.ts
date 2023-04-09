@@ -1,15 +1,15 @@
 import '../mongoose_helper';
-import { Category } from '../../server/models/category.model';
+import { Category, CategoryInput } from '../../server/models/category.model';
 import { categoryController } from '../../server/controllers/category.controller';
 
 describe('category controller', () => {
-  beforeAll(() => Category.deleteMany());
+  beforeAll(async () => await Category.deleteMany());
 
-  afterEach(() => Category.deleteMany());
+  afterEach(async () => await Category.deleteMany());
 
   describe('#addCategory', () => {
     it('should create a new category', async () => {
-      const category = {
+      const category: CategoryInput = {
         name: 'food',
       };
       const record = await categoryController.addCategory(category);
