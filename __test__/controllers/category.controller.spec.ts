@@ -5,9 +5,8 @@ import { categoryController } from '../../server/controllers/category.controller
 describe('category controller', () => {
   beforeAll(async () => await Category.deleteMany());
 
-  afterEach(async () => await Category.deleteMany());
-
   describe('#addCategory', () => {
+    beforeEach(async () => await Category.deleteMany());
     it('should create a new category', async () => {
       const input: CategoryInput = {
         name: 'food',
@@ -20,11 +19,13 @@ describe('category controller', () => {
 
   describe('#findByName', () => {
     beforeAll(async () => {
+      await Category.deleteMany();
       const input: CategoryInput = {
         name: 'food',
       };
       await categoryController.addCategory(input);
     });
+
     it('should return the correct category', async () => {
       const category = await categoryController.findByName('food');
       expect(category!._id).toBeDefined();

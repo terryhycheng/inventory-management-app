@@ -16,9 +16,18 @@ interface AddItemRequest extends NextApiRequest {
 
 export default async function handler(
   req: AddItemRequest,
-  res: NextApiResponse<IItem | { message: string }>
+  res: NextApiResponse<{ data: IItem | IItem[] } | { message: string }>
 ) {
-  if (req.method === 'POST') {
+  if (req.method === 'GET') {
+    try {
+      const items = await itemController.getAllItems();
+      res.status(200).json({ data: items });
+    } catch (error) {
+      res.status(500).json({
+        message: `failed to get items: ${(error as Error).message}`,
+      });
+    }
+  } else if (req.method === 'POST') {
     const { name, price, cost, openToSell, category } = req.body;
 
     if (!name || !price || !cost || openToSell === undefined || !category) {
@@ -41,9 +50,13 @@ export default async function handler(
         openToSell,
         category: result._id,
       });
-      res.status(201).json(item);
+      res.status(201).json({ data: item });
     } catch (error) {
-      res.status(500).json({ message: (error as Error).message });
+      res
+        .status(500)
+        .json({
+          message: `failed to create item: ${(error as Error).message}`,
+        });
     }
   } else {
     res.status(400).json({ message: 'method does not exist' });

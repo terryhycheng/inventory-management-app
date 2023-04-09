@@ -4,9 +4,9 @@ import { Category } from '../../server/models/category.model';
 import categoryApi from '../../pages/api/category';
 
 describe('Category API', () => {
-  beforeAll(() => Category.deleteMany());
+  beforeEach(async () => await Category.deleteMany());
 
-  afterEach(() => Category.deleteMany());
+  afterEach(async () => await Category.deleteMany());
 
   it('should return a new category with status code 201', async () => {
     const { req, res } = createMocks({

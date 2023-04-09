@@ -3,7 +3,7 @@ import { itemController } from '../../server/controllers/item.controller';
 import { Category, ICategory } from '../../server/models/category.model';
 import { Item, ItemInput } from '../../server/models/item.model';
 
-let category: ICategory;
+let category: ICategory | null;
 
 describe('item controller', () => {
   beforeAll(async () => {
@@ -12,7 +12,9 @@ describe('item controller', () => {
     category = await Category.create({ name: 'food' });
   });
 
-  afterEach(async () => await Item.deleteMany());
+  afterEach(async () => {
+    await Item.deleteMany();
+  });
 
   describe('#addItem', () => {
     it('should create a new item', async () => {
@@ -21,7 +23,7 @@ describe('item controller', () => {
         price: 100,
         cost: 50,
         openToSell: true,
-        category: category._id,
+        category: category!._id,
       };
 
       const item = await itemController.addItem(input);
@@ -30,7 +32,7 @@ describe('item controller', () => {
       expect(item.price).toEqual(100);
       expect(item.cost).toEqual(50);
       expect(item.openToSell).toEqual(true);
-      expect(item.category).toEqual(category._id);
+      expect(item.category).toEqual(category!._id);
     });
   });
 
