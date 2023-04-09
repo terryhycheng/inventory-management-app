@@ -1,3 +1,4 @@
+import { connectDB } from '../../../util/connectMongo';
 import { categoryController } from '../../../server/controllers/category.controller';
 import { itemController } from '../../../server/controllers/item.controller';
 import { IItem } from '../../../server/models/item.model';
@@ -26,6 +27,7 @@ export default async function handler(
     }
 
     try {
+      await connectDB();
       const result = await categoryController.findByName(category);
       if (result === null) {
         res.status(400).json({ message: 'category does not exist' });

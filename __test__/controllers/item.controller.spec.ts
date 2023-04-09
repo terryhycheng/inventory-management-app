@@ -33,4 +33,33 @@ describe('item controller', () => {
       expect(item.category).toEqual(category._id);
     });
   });
+
+  describe('#getAllItems', () => {
+    it('should return a list of items', async () => {
+      // SETUP
+      const inputA: ItemInput = {
+        name: 'testing 1',
+        price: 20,
+        cost: 10,
+        openToSell: false,
+      };
+
+      const inputB: ItemInput = {
+        name: 'testing 2',
+        price: 50,
+        cost: 25,
+        openToSell: true,
+      };
+      await itemController.addItem(inputA);
+      await itemController.addItem(inputB);
+
+      // ACTION
+      const items = await itemController.getAllItems();
+
+      // ASSERT
+      expect(items.length).toEqual(2);
+      expect(items[0].name).toEqual('testing 1');
+      expect(items[1].cost).toEqual(25);
+    });
+  });
 });

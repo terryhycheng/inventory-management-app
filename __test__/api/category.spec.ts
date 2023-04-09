@@ -1,7 +1,7 @@
 import '../mongoose_helper';
 import { createMocks } from 'node-mocks-http';
-import categoryApi from '../../pages/api/category';
 import { Category } from '../../server/models/category.model';
+import categoryApi from '../../pages/api/category';
 
 describe('Category API', () => {
   beforeAll(() => Category.deleteMany());

@@ -1,7 +1,7 @@
-import { Item, ItemInput } from '../../server/models/item.model';
-import { Category, ICategory } from '../../server/models/category.model';
 import '../mongoose_helper';
 import { createMocks } from 'node-mocks-http';
+import { Item, ItemInput } from '../../server/models/item.model';
+import { Category, ICategory } from '../../server/models/category.model';
 import itemApi from '../../pages/api/item';
 
 let category: ICategory;
