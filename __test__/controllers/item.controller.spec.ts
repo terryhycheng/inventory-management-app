@@ -64,4 +64,28 @@ describe('item controller', () => {
       expect(items[1]?.cost).toEqual(25);
     });
   });
+
+  describe('#findItemById', () => {
+    it('should return an item with the specific id', async () => {
+      // SETUP
+      const input: ItemInput = {
+        name: 'item A',
+        price: 20,
+        cost: 10,
+        openToSell: false,
+      };
+
+      // ACTION
+      const newItem = await itemController.addItem(input);
+      const itemFound = await itemController.findItemById(newItem._id);
+
+      // ASSERT
+      expect(itemFound?._id).toEqual(newItem._id);
+    });
+
+    it('should return null when id does not exist', async () => {
+      const res = await itemController.findItemById('643489d093f93adef086008f');
+      expect(res).toBe(null);
+    });
+  });
 });

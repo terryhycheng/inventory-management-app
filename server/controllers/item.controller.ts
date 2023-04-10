@@ -17,4 +17,12 @@ export const itemController = {
       throw new Error(`Error from #addItem: ${(error as Error).message}`);
     }
   },
+  findItemById: async (id: string) => {
+    try {
+      const item = await Item.findOne({ _id: id });
+      return item || null;
+    } catch (error) {
+      throw new Error(`Error from #findItemById: ${(error as Error).message}`);
+    }
+  },
 };
