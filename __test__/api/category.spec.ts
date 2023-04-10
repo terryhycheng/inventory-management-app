@@ -71,7 +71,7 @@ describe('Category API', () => {
     await categoryApi(req, res);
     const data = JSON.parse(res._getData());
 
-    expect(res._getStatusCode()).toBe(400);
-    expect(data.message).toEqual('method does not exist');
+    expect(res._getStatusCode()).toBe(404);
+    expect(data.message).toEqual('Invalid method: does not exist');
   });
 });
