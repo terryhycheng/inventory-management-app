@@ -8,7 +8,7 @@ export interface ItemInput {
   category?: string;
 }
 
-export interface IItem extends ItemInput, Document {}
+export interface IItem extends ItemInput, mongoose.Document {}
 
 const ItemSchema = new mongoose.Schema<IItem>({
   name: { type: String, require: true },

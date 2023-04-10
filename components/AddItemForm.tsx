@@ -1,7 +1,11 @@
-import { ICategory } from '@/server/models/category.model';
+import { useState } from 'react';
+import { NextRouter } from 'next/router';
+import axios, { AxiosError } from 'axios';
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+
+import { ICategory } from '@/server/models/category.model';
 
 const formSchema = z.object({
   name: z
@@ -16,21 +20,37 @@ const formSchema = z.object({
 
 type FormData = z.infer<typeof formSchema>;
 
-const AddItemForm = ({ categories }: { categories: ICategory[] }) => {
+type Props = {
+  categories: ICategory[];
+  router: NextRouter;
+};
+
+const AddItemForm = ({ categories, router }: Props) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const {
     register,
     handleSubmit,
     formState: { errors },
     control,
+    reset,
   } = useForm<FormData>({
     resolver: zodResolver(formSchema),
   });
-  const onSubmit: SubmitHandler<FormData> = (data) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<FormData> = async (data) => {
+    setIsSubmitting(true);
+    try {
+      await axios.post(`/api/item`, data);
+      router.replace(router.asPath);
+    } catch (error) {
+      console.log((error as AxiosError).message);
+    }
+    setIsSubmitting(false);
+    reset();
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
+      <h1>Add a new item</h1>
       <input type="text" placeholder="name" {...register('name')} />
       <p>{errors.name?.message}</p>
       <label htmlFor="price">Price</label>
@@ -38,6 +58,7 @@ const AddItemForm = ({ categories }: { categories: ICategory[] }) => {
         id="price"
         type="number"
         defaultValue={0}
+        step={0.05}
         min={0}
         {...register('price', {
           valueAsNumber: true,
@@ -49,6 +70,7 @@ const AddItemForm = ({ categories }: { categories: ICategory[] }) => {
         id="cost"
         type="number"
         defaultValue={0}
+        step={0.05}
         min={0}
         {...register('cost', {
           valueAsNumber: true,
@@ -100,7 +122,7 @@ const AddItemForm = ({ categories }: { categories: ICategory[] }) => {
         )}
       </select>
       <p>{errors.category?.message}</p>
-      <input type="submit" />
+      <input type="submit" disabled={isSubmitting} />
     </form>
   );
 };

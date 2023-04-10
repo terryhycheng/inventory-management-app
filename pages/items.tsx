@@ -1,21 +1,30 @@
+import { useState } from 'react';
 import AddItemForm from '@/components/AddItemForm';
 import { ICategory } from '@/server/models/category.model';
 import { IItem } from '@/server/models/item.model';
 import axios from 'axios';
+import { useRouter } from 'next/router';
 
 interface Props {
   items: IItem[];
   categories: ICategory[];
 }
 
-const items = ({ items, categories }: Props) => {
+const Items = ({ items, categories }: Props) => {
+  const router = useRouter();
   return (
     <>
-      <h1>Items</h1>
       <hr />
-      <AddItemForm categories={categories} />
+      <AddItemForm categories={categories} router={router} />
       <hr />
       {items.length === 0 && <p>There is no item in the list.</p>}
+      {items.length !== 0 &&
+        items.map((item) => (
+          <div key={item._id}>
+            <p>{item.name}</p>
+            <p>£ {item.price}</p>
+          </div>
+        ))}
     </>
   );
 };
@@ -25,8 +34,8 @@ export const getStaticProps = async () => {
   const categoriesRes = await axios.get(`${process.env.HOST}/api/category`);
   return {
     props: { items: itemsRes.data.data, categories: categoriesRes.data.data },
-    revalidate: 10,
+    revalidate: 1,
   };
 };
 
-export default items;
+export default Items;
