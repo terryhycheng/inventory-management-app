@@ -38,7 +38,7 @@ export default async function handler(
 
     try {
       await connectDB();
-      const result = await categoryController.findByName(category);
+      const result = await categoryController.findCategoryByName(category);
       if (result === null) {
         res.status(400).json({ message: 'category does not exist' });
         return;

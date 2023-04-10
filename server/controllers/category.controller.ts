@@ -20,7 +20,7 @@ export const categoryController = {
     }
   },
 
-  findByName: async (name: string) => {
+  findCategoryByName: async (name: string) => {
     try {
       const category = await Category.findOne({ name }).exec();
       return category || null;

@@ -17,7 +17,7 @@ describe('category controller', () => {
     });
   });
 
-  describe('#findByName', () => {
+  describe('#findCategoryByName', () => {
     beforeAll(async () => {
       await Category.deleteMany();
       const input: CategoryInput = {
@@ -27,13 +27,15 @@ describe('category controller', () => {
     });
 
     it('should return the correct category', async () => {
-      const category = await categoryController.findByName('food');
+      const category = await categoryController.findCategoryByName('food');
       expect(category!._id).toBeDefined();
       expect(category!.name).toEqual('food');
     });
 
     it('should return null', async () => {
-      const category = await categoryController.findByName('wrong name');
+      const category = await categoryController.findCategoryByName(
+        'wrong name'
+      );
       expect(category).toBe(null);
     });
   });
