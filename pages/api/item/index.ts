@@ -58,6 +58,6 @@ export default async function handler(
       });
     }
   } else {
-    res.status(400).json({ message: 'method does not exist' });
+    res.status(404).json({ message: 'Invalid method: does not exist' });
   }
 }
