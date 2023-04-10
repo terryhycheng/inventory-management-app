@@ -11,9 +11,19 @@ interface CategoryApiRequest extends NextApiRequest {
 
 export default async function handler(
   req: CategoryApiRequest,
-  res: NextApiResponse<ICategory | { message: string }>
+  res: NextApiResponse<{ data: ICategory | ICategory[] } | { message: string }>
 ) {
-  if (req.method === 'POST') {
+  if (req.method === 'GET') {
+    try {
+      await connectDB();
+      const categories = await categoryController.getAllCategories();
+      res.status(200).json({ data: categories });
+    } catch (error) {
+      res.status(500).json({
+        message: `failed to get all categories: ${(error as Error).message}`,
+      });
+    }
+  } else if (req.method === 'POST') {
     const { name } = req.body;
     if (!name) {
       res.status(400).json({ message: '`name` is required' });
@@ -22,9 +32,11 @@ export default async function handler(
     try {
       await connectDB();
       const category = await categoryController.addCategory({ name });
-      res.status(201).json(category);
+      res.status(201).json({ data: category });
     } catch (error) {
-      res.status(500).json({ message: (error as Error).message });
+      res.status(500).json({
+        message: `failed to create category: ${(error as Error).message}`,
+      });
     }
   } else {
     res.status(400).json({ message: 'method does not exist' });

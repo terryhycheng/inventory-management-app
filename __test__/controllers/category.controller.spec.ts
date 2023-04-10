@@ -37,4 +37,14 @@ describe('category controller', () => {
       expect(category).toBe(null);
     });
   });
+
+  describe('#getAllCategories', () => {
+    beforeEach(async () => await Category.deleteMany());
+    it('should return a list of categories', async () => {
+      await categoryController.addCategory({ name: 'type a' });
+      await categoryController.addCategory({ name: 'type b' });
+      const categories = await categoryController.getAllCategories();
+      expect(categories.length).toEqual(2);
+    });
+  });
 });
