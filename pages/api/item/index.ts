@@ -20,6 +20,7 @@ export default async function handler(
 ) {
   if (req.method === 'GET') {
     try {
+      await connectDB();
       const items = await itemController.getAllItems();
       res.status(200).json({ data: items });
     } catch (error) {
@@ -52,11 +53,9 @@ export default async function handler(
       });
       res.status(201).json({ data: item });
     } catch (error) {
-      res
-        .status(500)
-        .json({
-          message: `failed to create item: ${(error as Error).message}`,
-        });
+      res.status(500).json({
+        message: `failed to create item: ${(error as Error).message}`,
+      });
     }
   } else {
     res.status(400).json({ message: 'method does not exist' });

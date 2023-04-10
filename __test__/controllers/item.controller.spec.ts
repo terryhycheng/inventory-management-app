@@ -60,8 +60,8 @@ describe('item controller', () => {
 
       // ASSERT
       expect(items.length).toEqual(2);
-      expect(items[0].name).toEqual('testing 1');
-      expect(items[1].cost).toEqual(25);
+      expect(items[0]?.name).toEqual('testing 1');
+      expect(items[1]?.cost).toEqual(25);
     });
   });
 });
