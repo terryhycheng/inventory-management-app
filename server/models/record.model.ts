@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 export interface RecordInput {
-  type: string;
+  type: 'sold' | 'import';
   quantity: number;
   item?: string;
 }
