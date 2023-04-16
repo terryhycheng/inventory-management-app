@@ -14,7 +14,7 @@ const RecordSchema = new mongoose.Schema<IRecord>(
     quantity: { type: Number, required: true },
     item: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Item',
+      ref: 'item',
       required: true,
     },
   },
@@ -24,5 +24,5 @@ const RecordSchema = new mongoose.Schema<IRecord>(
 );
 
 export const Record =
-  (mongoose.models.Record as mongoose.Model<IRecord>) ||
-  mongoose.model('Record', RecordSchema);
+  (mongoose.models.record as mongoose.Model<IRecord>) ||
+  mongoose.model('record', RecordSchema);

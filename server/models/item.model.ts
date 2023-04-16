@@ -6,6 +6,7 @@ export interface ItemInput {
   cost: number;
   openToSell: boolean;
   category?: string;
+  records?: string[];
 }
 
 export interface IItem extends ItemInput, mongoose.Document {}
@@ -17,11 +18,17 @@ const ItemSchema = new mongoose.Schema<IItem>({
   openToSell: { type: Boolean, require: true },
   category: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Category',
+    ref: 'category',
     require: true,
   },
+  records: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'record',
+    },
+  ],
 });
 
 export const Item =
-  (mongoose.models.Item as mongoose.Model<IItem>) ||
-  mongoose.model('Item', ItemSchema);
+  (mongoose.models.item as mongoose.Model<IItem>) ||
+  mongoose.model('item', ItemSchema);
