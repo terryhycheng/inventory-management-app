@@ -1,7 +1,8 @@
 import '../mongoose_helper';
 import { itemController } from '../../server/controllers/item.controller';
 import { Category, ICategory } from '../../server/models/category.model';
-import { Item, ItemInput } from '../../server/models/item.model';
+import { IItem, Item, ItemInput } from '../../server/models/item.model';
+import { IRecord, Record } from '../../server/models/record.model';
 
 let category: ICategory | null;
 
@@ -86,6 +87,38 @@ describe('item controller', () => {
     it('should return null when id does not exist', async () => {
       const res = await itemController.findItemById('643489d093f93adef086008f');
       expect(res).toBe(null);
+    });
+  });
+
+  describe('#addRecord', () => {
+    let record: IRecord;
+    let item: IItem;
+
+    beforeAll(async () => {
+      await Record.deleteMany();
+      const input: ItemInput = {
+        name: 'test item',
+        price: 100,
+        cost: 50,
+        openToSell: true,
+        category: category!._id,
+      };
+
+      item = await itemController.addItem(input);
+      record = await Record.create({
+        type: 'sale',
+        quantity: 20,
+        item: item._id,
+      });
+    });
+
+    beforeAll(async () => {
+      await Record.deleteMany();
+    });
+
+    it('should return the new item', async () => {
+      const newItem = await itemController.addRecord(item._id, record._id);
+      expect(newItem?.records?.length).toEqual(1);
     });
   });
 });
