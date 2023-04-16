@@ -1,5 +1,7 @@
+import { connectDB } from '../../../util/connectMongo';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { recordController } from '../../../server/controllers/record.controller';
+import { itemController } from '../../../server/controllers/item.controller';
 
 export default async function handler(
   req: NextApiRequest,
@@ -7,6 +9,7 @@ export default async function handler(
 ) {
   if (req.method === 'GET') {
     try {
+      await connectDB();
       const records = await recordController.getAllRecords();
       res.status(200).json({ data: records });
     } catch (error) {
@@ -22,8 +25,10 @@ export default async function handler(
       return;
     }
     try {
+      await connectDB();
       const record = await recordController.addRecord({ type, quantity, item });
-      res.status(200).json({ data: record });
+      const newItem = await itemController.addRecord(item, record._id);
+      res.status(200).json({ data: record, item: newItem });
     } catch (error) {
       res
         .status(500)
