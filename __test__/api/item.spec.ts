@@ -4,7 +4,7 @@ import { Item, ItemInput } from '../../server/models/item.model';
 import { Category, ICategory } from '../../server/models/category.model';
 import itemApi from '../../pages/api/item';
 
-let category: ICategory | null;
+let category: ICategory;
 
 describe('item Api', () => {
   beforeAll(async () => {

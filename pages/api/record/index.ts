@@ -28,7 +28,7 @@ export default async function handler(
       await connectDB();
       const record = await recordController.addRecord({ type, quantity, item });
       const newItem = await itemController.addRecord(item, record._id);
-      res.status(200).json({ data: record, item: newItem });
+      res.status(201).json({ data: { record, item: newItem } });
     } catch (error) {
       res
         .status(500)
