@@ -35,6 +35,7 @@ const AddRecordForm = ({ items }: Props) => {
 
   return (
     <>
+      <h1>Add a new record</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
         <label htmlFor="quantity">Quantity</label>
         <input

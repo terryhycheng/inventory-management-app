@@ -5,9 +5,10 @@ import { IItem } from '@/server/models/item.model';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import { GetStaticProps } from 'next';
+import ItemBox, { ItemData } from '@/components/ItemBox';
 
 interface Props {
-  items: IItem[];
+  items: ItemData[];
   categories: ICategory[];
 }
 
@@ -19,13 +20,16 @@ const Items = ({ items, categories }: Props) => {
       <AddItemForm categories={categories} router={router} />
       <hr />
       {items.length === 0 && <p>There is no item in the list.</p>}
-      {items.length !== 0 &&
-        items.map((item) => (
-          <div key={item._id}>
-            <p>{item.name}</p>
-            <p>£ {item.price}</p>
-          </div>
-        ))}
+      {items.length !== 0 && (
+        <>
+          <p>
+            There are total {categories.length} kinds of items in the inventory.
+          </p>
+          {items.map((item) => (
+            <ItemBox key={item._id} item={item} />
+          ))}
+        </>
+      )}
     </>
   );
 };
