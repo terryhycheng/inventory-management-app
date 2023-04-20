@@ -46,6 +46,22 @@ describe('record Api', () => {
       expect(data.item.records.length).toEqual(1);
       expect(data.record._id).toBeDefined();
     });
+
+    it('should return 400 status code', async () => {
+      const { req, res } = createMocks({
+        method: 'POST',
+        body: {
+          type: 'sold',
+          quantity: 20,
+        },
+      });
+
+      await recordApi(req, res);
+      const { message } = JSON.parse(res._getData());
+
+      expect(res._getStatusCode()).toEqual(400);
+      expect(message).toEqual('all fields must not be empty');
+    });
   });
 
   describe('GET', () => {
