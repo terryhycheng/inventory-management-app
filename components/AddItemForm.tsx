@@ -82,6 +82,7 @@ const AddItemForm = ({ categories, router }: Props) => {
         control={control}
         render={({ field: { onChange, value } }) => (
           <div>
+            <span>Public </span>
             <label>
               <input
                 type="radio"
@@ -101,7 +102,9 @@ const AddItemForm = ({ categories, router }: Props) => {
           </div>
         )}
       />
-      <p>{errors.openToSell?.message}</p>
+      <p>
+        {errors.openToSell?.message && 'You must select one of the options'}
+      </p>
       <select defaultValue="" {...register('category')}>
         {categories.length === 0 && (
           <option disabled value="">

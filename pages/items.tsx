@@ -4,6 +4,7 @@ import { ICategory } from '@/server/models/category.model';
 import { IItem } from '@/server/models/item.model';
 import axios from 'axios';
 import { useRouter } from 'next/router';
+import { GetStaticProps } from 'next';
 
 interface Props {
   items: IItem[];
@@ -29,7 +30,7 @@ const Items = ({ items, categories }: Props) => {
   );
 };
 
-export const getStaticProps = async () => {
+export const getStaticProps: GetStaticProps = async () => {
   const itemsRes = await axios.get(`${process.env.HOST}/api/item`);
   const categoriesRes = await axios.get(`${process.env.HOST}/api/category`);
   return {
