@@ -5,7 +5,10 @@ export const itemController = {
   getAllItems: async () => {
     try {
       const items = await Item.find()
-        .populate([{ path: 'records', model: Record }, { path: 'category' }])
+        .populate([
+          { path: 'records', model: Record, select: ['type', 'quantity'] },
+          { path: 'category' },
+        ])
         .sort({ name: 'asc' });
       return items;
     } catch (error) {
