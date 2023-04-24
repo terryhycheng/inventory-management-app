@@ -9,7 +9,7 @@ import { AiFillGithub } from 'react-icons/ai';
 
 const NavBar = () => {
   return (
-    <div className="flex w-[180px] flex-col justify-between border-r border-gray-300 bg-main pt-10">
+    <div className="flex w-[180px] flex-col justify-between border-gray-300 bg-main pt-10">
       <nav className="flex flex-col gap-4 text-white">
         <Link href="/" className="flex flex-col items-center gap-1 pb-4">
           <HiOutlineHome className="h-8 w-8" />
