@@ -22,12 +22,14 @@ const Items = ({ items, categories }: Props) => {
       {items.length === 0 && <p>There is no item in the list.</p>}
       {items.length !== 0 && (
         <>
-          <p>
+          <p className="my-4 font-light text-[#AAAAAA]">
             There are total {categories.length} kinds of items in the inventory.
           </p>
-          {items.map((item) => (
-            <ItemBox key={item._id} item={item} />
-          ))}
+          <div className="grid gap-4 lg:grid-cols-3">
+            {items.map((item) => (
+              <ItemBox key={item._id} item={item} />
+            ))}
+          </div>
         </>
       )}
     </>
