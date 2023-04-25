@@ -1,77 +1,129 @@
-import '../mongoose_helper';
 import { createMocks } from 'node-mocks-http';
-import { Category } from '../../server/models/category.model';
 import categoryApi from '../../pages/api/category';
 
-describe('Category API', () => {
-  beforeEach(async () => await Category.deleteMany());
+import { connectDB } from '../../util/connectMongo';
+import { categoryController } from '../../server/controllers/category.controller';
 
-  afterEach(async () => await Category.deleteMany());
+jest.mock('../../util/connectMongo');
+jest.mock('../../server/controllers/category.controller');
 
-  it('should return a new category with status code 201', async () => {
-    const { req, res } = createMocks({
-      method: 'POST',
-      body: {
-        name: 'testing',
-      },
-    });
-
-    await categoryApi(req, res);
-    const data = JSON.parse(res._getData());
-
-    expect(res._getStatusCode()).toBe(201);
-    expect(data.data._id).toBeDefined();
-    expect(data.data.name).toEqual('testing');
+describe('category api unit tests', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
   });
 
-  it('should throw an error when `name` is missing', async () => {
-    const { req, res } = createMocks({
-      method: 'POST',
+  describe('GET route', () => {
+    it('should return a list of categories with status code 200', async () => {
+      const { req, res } = createMocks({
+        method: 'GET',
+      });
+
+      const categoriesMock = [
+        { _id: '1', name: 'test 1' },
+        { _id: '2', name: 'test 2' },
+        { _id: '3', name: 'test 3' },
+      ];
+
+      (categoryController.getAllCategories as jest.Mock).mockResolvedValue(
+        categoriesMock
+      );
+
+      await categoryApi(req, res);
+      const data = JSON.parse(res._getData());
+
+      expect(connectDB).toHaveBeenCalled();
+      expect(res._getStatusCode()).toBe(200);
+      expect(data.data.length).toEqual(3);
     });
 
-    await categoryApi(req, res);
-    const data = JSON.parse(res._getData());
+    it('should return an error message when something goes wrong', async () => {
+      const { req, res } = createMocks({
+        method: 'GET',
+      });
+      const error = new Error('something went wrong');
+      (categoryController.getAllCategories as jest.Mock).mockRejectedValue(
+        error
+      );
 
-    expect(res._getStatusCode()).toBe(400);
-    expect(data.message).toEqual('`name` is required');
+      await categoryApi(req, res);
+      const data = JSON.parse(res._getData());
+
+      expect(connectDB).toHaveBeenCalled();
+      expect(res._getStatusCode()).toBe(500);
+      expect(data.message).toEqual(
+        'failed to get all categories: something went wrong'
+      );
+    });
   });
 
-  it('should return a list of categories with status code 200', async () => {
-    const postMockA = createMocks({
-      method: 'POST',
-      body: {
-        name: 'type a',
-      },
-    });
-    const postMockB = createMocks({
-      method: 'POST',
-      body: {
-        name: 'type b',
-      },
-    });
-    const getMock = createMocks({
-      method: 'GET',
-    });
+  describe('POST route', () => {
+    it('should return a new category with status code 201', async () => {
+      const { req, res } = createMocks({
+        method: 'POST',
+        body: {
+          name: 'something',
+        },
+      });
 
-    await categoryApi(postMockA.req, postMockA.res);
-    await categoryApi(postMockB.req, postMockB.res);
-    await categoryApi(getMock.req, getMock.res);
+      const categoryMock = { _id: '1', name: 'something' };
 
-    const data = JSON.parse(getMock.res._getData());
+      (categoryController.addCategory as jest.Mock).mockResolvedValue(
+        categoryMock
+      );
 
-    expect(getMock.res._getStatusCode()).toBe(200);
-    expect(data.data.length).toEqual(2);
-  });
+      await categoryApi(req, res);
+      const data = JSON.parse(res._getData());
 
-  it('should throw an error when method does not exist', async () => {
-    const { req, res } = createMocks({
-      method: 'PATCH',
+      expect(connectDB).toHaveBeenCalled();
+      expect(categoryController.addCategory).toHaveBeenCalledWith({
+        name: 'something',
+      });
+      expect(res._getStatusCode()).toBe(201);
+      expect(data.data).toEqual(categoryMock);
     });
 
-    await categoryApi(req, res);
-    const data = JSON.parse(res._getData());
+    it('should throw an error when `name` is missing', async () => {
+      const { req, res } = createMocks({
+        method: 'POST',
+      });
 
-    expect(res._getStatusCode()).toBe(404);
-    expect(data.message).toEqual('Invalid method: does not exist');
+      await categoryApi(req, res);
+      const data = JSON.parse(res._getData());
+
+      expect(res._getStatusCode()).toBe(400);
+      expect(data.message).toEqual('`name` is required');
+    });
+
+    it('should return an error message when something goes wrong', async () => {
+      const { req, res } = createMocks({
+        method: 'POST',
+        body: {
+          name: 'something',
+        },
+      });
+      const error = new Error('something went wrong');
+      (categoryController.addCategory as jest.Mock).mockRejectedValue(error);
+
+      await categoryApi(req, res);
+      const data = JSON.parse(res._getData());
+
+      expect(connectDB).toHaveBeenCalled();
+      expect(res._getStatusCode()).toBe(500);
+      expect(data.message).toEqual(
+        'failed to create category: something went wrong'
+      );
+    });
+
+    it('should throw an error when method does not exist', async () => {
+      const { req, res } = createMocks({
+        method: 'PATCH',
+      });
+
+      await categoryApi(req, res);
+      const data = JSON.parse(res._getData());
+
+      expect(res._getStatusCode()).toBe(404);
+      expect(data.message).toEqual('Invalid method: does not exist');
+    });
   });
 });
