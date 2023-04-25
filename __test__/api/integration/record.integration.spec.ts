@@ -1,9 +1,9 @@
-import '../mongoose_helper';
+import '../../mongoose_helper';
 import { createMocks } from 'node-mocks-http';
-import recordApi from '../../pages/api/record';
-import { IItem, Item, ItemInput } from '../../server/models/item.model';
-import { Category, ICategory } from '../../server/models/category.model';
-import { Record } from '../../server/models/record.model';
+import recordApi from '../../../pages/api/record';
+import { IItem, Item, ItemInput } from '../../../server/models/item.model';
+import { Category, ICategory } from '../../../server/models/category.model';
+import { Record } from '../../../server/models/record.model';
 
 let category: ICategory;
 let item: IItem;
